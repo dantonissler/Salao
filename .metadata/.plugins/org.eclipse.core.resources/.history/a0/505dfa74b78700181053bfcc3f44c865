@@ -1,0 +1,17 @@
+package main.java.connection;
+
+import com.mysql.jdbc.Connection;
+
+public class Test {
+	/**
+	 * @author Danton Issler
+	 */
+	public static void main(String[] args) {
+
+		System.out.println(ConnectionFactory.getConnection());
+
+		Connection con = ConnectionFactory.getConnection();
+		java.sql.PreparedStatement stmt = null;
+		
+	}
+}

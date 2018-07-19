@@ -1,0 +1,26 @@
+package main.java.connection;
+
+import java.sql.SQLException;
+
+import main.java.model.dao.UsuarioDAO;
+
+public class Test {
+	/**
+	 * @author Danton Issler
+	 */
+	public static void main(String[] args) {
+
+		System.out.println(ConnectionFactory.getConnection());
+		
+		UsuarioDAO us = new UsuarioDAO();
+		
+		try {
+			us.acessarSistema("root", "toor");
+			System.out.println(us.getAcesso());
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+}

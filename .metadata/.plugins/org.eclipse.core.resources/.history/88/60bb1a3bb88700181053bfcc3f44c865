@@ -1,0 +1,45 @@
+package main.java.connection;
+
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
+import main.java.model.dao.ProdutoDAO;
+
+import com.mysql.jdbc.Connection;
+
+public class Test {
+	/**
+	 * @author Danton Issler
+	 */
+	public static void main(String[] args) {
+
+		System.out.println(ConnectionFactory.getConnection());
+		
+		Connection con = ConnectionFactory.getConnection();
+		
+		java.sql.PreparedStatement stmt = null;
+
+		try {
+			stmt = con.prepareStatement(
+					"INSERT INTO `usuario`(`id_Usuario`, `login`, `senha`, `tipo_Usuario`, `id_Funcionario`) "
+					+ "VALUES (?,?,?,?,?)");
+
+			stmt.setString(1, u.getLogin());
+			stmt.setString(2, u.getSenha());
+			stmt.setInt(3, u.getTipo());
+
+			stmt.executeUpdate();
+			JOptionPane.showMessageDialog(null, "Salvo com sucesso!");
+
+		} catch (SQLException ex) {
+			Logger.getLogger(ProdutoDAO.class.getName()).log(Level.SEVERE, null, ex);
+			JOptionPane.showMessageDialog(null, "Erro ao salvar: " + ex);
+		} finally {
+			ConnectionFactory.closeConnection(con, stmt);
+		}
+		
+	}
+}

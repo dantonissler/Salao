@@ -1,0 +1,194 @@
+package main.java.view.login;
+
+import java.awt.BorderLayout;
+import java.awt.FlowLayout;
+
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.border.EmptyBorder;
+import javax.swing.GroupLayout;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.JTextField;
+import javax.swing.JLabel;
+
+import java.awt.Font;
+
+import javax.swing.LayoutStyle.ComponentPlacement;
+
+import main.java.model.bean.Usuario;
+import main.java.model.dao.ProdutoDAO;
+import main.java.model.dao.UsuarioDAO;
+import main.java.tools.Mensagens;
+import main.java.view.menu.MenuFrame;
+
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JPasswordField;
+
+public class Relogar extends JDialog {
+
+	/**
+	 * @author Danton Issler
+	 */
+	private static final long serialVersionUID = 1L;
+	private final JPanel contentPanel = new JPanel();
+	private JTextField txtLogin;
+	private JPasswordField passwordField;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		try {
+			Relogar dialog = new Relogar();
+			dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+			dialog.setVisible(true);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Create the dialog.
+	 */
+	public Relogar() {
+		setBounds(100, 100, 308, 221);
+		getContentPane().setLayout(new BorderLayout());
+		contentPanel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		getContentPane().add(contentPanel, BorderLayout.CENTER);
+
+		txtLogin = new JTextField();
+		txtLogin.setColumns(10);
+
+		JLabel label = new JLabel("Login");
+		label.setFont(new Font("Arial", Font.PLAIN, 12));
+
+		JLabel label_1 = new JLabel("Senha");
+		label_1.setFont(new Font("Arial", Font.PLAIN, 12));
+
+		passwordField = new JPasswordField();
+		GroupLayout gl_contentPanel = new GroupLayout(contentPanel);
+		gl_contentPanel.setHorizontalGroup(gl_contentPanel.createParallelGroup(
+				Alignment.TRAILING).addGroup(
+				gl_contentPanel
+						.createSequentialGroup()
+						.addGap(58)
+						.addGroup(
+								gl_contentPanel
+										.createParallelGroup(
+												Alignment.TRAILING, false)
+										.addComponent(label_1,
+												GroupLayout.DEFAULT_SIZE,
+												GroupLayout.DEFAULT_SIZE,
+												Short.MAX_VALUE)
+										.addComponent(label,
+												GroupLayout.DEFAULT_SIZE, 80,
+												Short.MAX_VALUE))
+						.addPreferredGap(ComponentPlacement.RELATED)
+						.addGroup(
+								gl_contentPanel
+										.createParallelGroup(Alignment.LEADING)
+										.addComponent(passwordField,
+												GroupLayout.DEFAULT_SIZE, 125,
+												Short.MAX_VALUE)
+										.addComponent(txtLogin, 125, 125,
+												Short.MAX_VALUE)).addGap(67)));
+		gl_contentPanel
+				.setVerticalGroup(gl_contentPanel
+						.createParallelGroup(Alignment.TRAILING)
+						.addGroup(
+								gl_contentPanel
+										.createSequentialGroup()
+										.addContainerGap(29, Short.MAX_VALUE)
+										.addGroup(
+												gl_contentPanel
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																txtLogin,
+																GroupLayout.PREFERRED_SIZE,
+																23,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																label,
+																GroupLayout.PREFERRED_SIZE,
+																25,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(18)
+										.addGroup(
+												gl_contentPanel
+														.createParallelGroup(
+																Alignment.BASELINE)
+														.addComponent(
+																label_1,
+																GroupLayout.PREFERRED_SIZE,
+																25,
+																GroupLayout.PREFERRED_SIZE)
+														.addComponent(
+																passwordField,
+																GroupLayout.PREFERRED_SIZE,
+																GroupLayout.DEFAULT_SIZE,
+																GroupLayout.PREFERRED_SIZE))
+										.addGap(52)));
+		contentPanel.setLayout(gl_contentPanel);
+		{
+			JPanel buttonPane = new JPanel();
+			buttonPane.setLayout(new FlowLayout(FlowLayout.RIGHT));
+			getContentPane().add(buttonPane, BorderLayout.SOUTH);
+			{
+				JButton okButton = new JButton("OK");
+				okButton.addActionListener(new ActionListener() {
+					@SuppressWarnings("deprecation")
+					public void actionPerformed(ActionEvent arg0) {
+						UsuarioDAO userdao = new UsuarioDAO();
+
+						try {
+							userdao.acessarSistema(txtLogin.getText(),
+									passwordField.getText());
+						} catch (SQLException e1) {
+							Logger.getLogger(ProdutoDAO.class.getName()).log(
+									Level.SEVERE, null, e1);
+							JOptionPane.showMessageDialog(null,
+									"Erro ao salvar: " + e1);
+						}
+
+						if (userdao.getAcesso() == true) {
+							MenuFrame mf = new MenuFrame();
+							mf.setLocationRelativeTo(mf);
+							mf.setVisible(true);
+							setVisible(false);
+						} else {
+							txtLogin.setText("");
+							passwordField.setText("");
+							txtLogin.requestFocus();
+						}
+					}
+				});
+				okButton.setActionCommand("OK");
+				buttonPane.add(okButton);
+				getRootPane().setDefaultButton(okButton);
+			}
+			{
+				JButton cancelButton = new JButton("Cancel");
+				cancelButton.addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						Mensagens ms = new Mensagens("Alerta");
+						Usuario user = new Usuario();
+						int resposta = ms.pergunta("Deseja permanecer no usuário "+user.getLogin()+"?");
+						if (resposta == 0) {
+							setVisible(false);
+						}
+					}
+				});
+				cancelButton.setActionCommand("Cancel");
+				buttonPane.add(cancelButton);
+			}
+		}
+	}
+}

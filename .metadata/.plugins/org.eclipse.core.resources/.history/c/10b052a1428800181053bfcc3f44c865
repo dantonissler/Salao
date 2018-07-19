@@ -1,0 +1,78 @@
+package main.java.model.bean;
+
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+import javax.swing.JOptionPane;
+
+import main.java.connection.ConnectionFactory;
+import main.java.model.dao.ProdutoDAO;
+
+import com.mysql.jdbc.Connection;
+
+public class Usuario {
+
+	/**
+	 * @author Danton Issler
+	 */
+
+	private int id_Usuario;
+	private String login;
+	private String senha;
+	private int tipo;
+	private int id_Funcionario;
+
+	public int getId_Funcionario() {
+		return id_Funcionario;
+	}
+
+	public void setId_Funcionario(int id_Funcionario) {
+		this.id_Funcionario = id_Funcionario;
+	}
+
+	public int getTipo() {
+		return tipo;
+	}
+
+	public void setTipo(int tipo) {
+		this.tipo = tipo;
+	}
+
+	public int getId_Usuario() {
+		return id_Usuario;
+	}
+
+	public void setId_Usuario(int id_Usuario) {
+		this.id_Usuario = id_Usuario;
+	}
+
+	public String getLogin() {
+		Connection con = ConnectionFactory.getConnection();
+		java.sql.PreparedStatement stmt = null;
+		
+		
+		try {
+			stmt = con.prepareStatement("SELECT `login` FROM `usuario` WHERE `id_Usuario` = `id_Usuario`");
+		} catch (SQLException e) {
+			Logger.getLogger(ProdutoDAO.class.getName()).log(Level.SEVERE, null, e);
+			JOptionPane.showMessageDialog(null, "Erro ao salvar: " + e);
+		} finally {
+			ConnectionFactory.closeConnection(con, stmt);
+		}
+		
+		return login;
+	}
+
+	public void setLogin(String login) {
+		this.login = login;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
+	}
+}

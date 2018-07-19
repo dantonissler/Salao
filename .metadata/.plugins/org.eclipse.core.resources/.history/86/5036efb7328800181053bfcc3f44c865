@@ -1,0 +1,13 @@
+package main.java.connection;
+
+public class Test {
+	/**
+	 * @author Danton Issler
+	 */
+	public static void main(String[] args) {
+
+		System.out.println(ConnectionFactory.getConnection());
+		
+
+	}
+}
